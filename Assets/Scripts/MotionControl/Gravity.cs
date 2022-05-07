@@ -3,8 +3,11 @@ using UnityEngine;
 public class Gravity : MonoBehaviour
 {
     [SerializeField] private float _gravityForce=10;
+
     private CharacterController _characterController;
+
     private float _currentAttractionCharacter;
+
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
@@ -22,6 +25,5 @@ public class Gravity : MonoBehaviour
             _currentAttractionCharacter = 0;
             return _currentAttractionCharacter;
         }
-
     }
 }

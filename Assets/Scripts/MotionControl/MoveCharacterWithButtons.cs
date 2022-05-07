@@ -3,8 +3,8 @@ using UnityEngine;
 public class MoveCharacterWithButtons : MonoBehaviour
 {
     [SerializeField] private CharacterMovement _characterMovement;
-    [SerializeField] private SwitchingAnimations _switchingAnimations;
-    
+
+    private bool _isMoving = false;
 
     private void Update()
     {
@@ -16,12 +16,21 @@ public class MoveCharacterWithButtons : MonoBehaviour
     {
         if (Input.GetAxis("Horizontal")!=0 || Input.GetAxis("Vertical") != 0)
         {   
-            _switchingAnimations.CharacterMoving();
+
             _characterMovement.MoveCharacter(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")));
+            if (_isMoving == false)
+            {
+                _characterMovement.PlayerMoved();
+                _isMoving = true;
+            }
         }
         else
         {
-            _switchingAnimations.CharacterStoped();
+            if (_isMoving == true)
+            {
+                _characterMovement.PlayerStopped();
+                _isMoving = false;
+            }
         }
     }
 

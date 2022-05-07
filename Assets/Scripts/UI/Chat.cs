@@ -12,6 +12,7 @@ public class Chat : MonoBehaviour
         _screenKeyboard = TouchScreenKeyboard.Open("",TouchScreenKeyboardType.Default);
         _moveCharacterWithButtons.enabled = false;
     }
+
     private void Update()
     {
         if(TouchScreenKeyboard.visible==false && _screenKeyboard!=null)

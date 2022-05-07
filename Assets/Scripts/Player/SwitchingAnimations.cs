@@ -4,19 +4,14 @@ using UnityEngine;
 public class SwitchingAnimations : MonoBehaviour
 {
     [SerializeField] private Animator animator;
-    private PhotonView _photonView;
+
+    private CharacterMovement _characterMovement;
 
     private void Start()
     {
-        _photonView = GetComponent<PhotonView>();
-    }
-
-    private void Update()
-    {
-        if(_photonView.IsMine==false)
-        {
-            return;
-        }
+        _characterMovement = GetComponent<CharacterMovement>();
+        _characterMovement.Stopped += CharacterStoped;
+        _characterMovement.Moved += CharacterMoving;
     }
 
     public void CharacterMoving()
@@ -27,5 +22,11 @@ public class SwitchingAnimations : MonoBehaviour
     public void CharacterStoped()
     {
         animator.SetBool("IsWalking", false);
+    }
+
+    private void OnDestroy()
+    {
+        _characterMovement.Stopped -= CharacterStoped;
+        _characterMovement.Moved -= CharacterMoving;
     }
 }

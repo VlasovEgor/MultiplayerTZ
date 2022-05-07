@@ -7,15 +7,22 @@ public class CheckingYourCharacter : MonoBehaviour
     [SerializeField] private GameObject _playerControllerCanvas;
     [SerializeField] private GameObject _playerButtonCanvas;
     [SerializeField] private GameObject _playerMoveButtonsController;
+    [SerializeField] private GameObject _nickname;
 
     private PhotonView _photonView;
+    private GameManager _gameManager;
 
+    
     void Start()
     {
         _photonView = GetComponent<PhotonView>();
-    }
 
-    private void Update()
+        _gameManager = FindObjectOfType<GameManager>();
+        _gameManager.Connected += PlayerOnConnected;
+        _gameManager.PlayerConnected();
+    }
+    
+    private void PlayerOnConnected()
     {
         if (_photonView.IsMine == false)
         {
@@ -23,7 +30,13 @@ public class CheckingYourCharacter : MonoBehaviour
             _playerControllerCanvas.SetActive(false);
             _playerButtonCanvas.SetActive(false);
             _playerMoveButtonsController.SetActive(false);
-            return;
+            _nickname.SetActive(true);
         }
     }
+
+    private void OnDestroy()
+    {
+        _gameManager.Connected -= PlayerOnConnected;
+    }
+
 }

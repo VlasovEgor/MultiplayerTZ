@@ -3,8 +3,9 @@ using UnityEngine;
 public class JoystickForMovement : JoystickHandler
 {
     [SerializeField] private CharacterMovement _characterMovement;
-    [SerializeField] private SwitchingAnimations _switchingAnimations;
-    
+
+    private bool _isMoving=false;
+
     private void Update()
     { 
         Movement();
@@ -14,12 +15,21 @@ public class JoystickForMovement : JoystickHandler
     {
         if (_inputVector.x != 0 || _inputVector.y != 0)
         {
-            _switchingAnimations.CharacterMoving();
             _characterMovement.MoveCharacter(new Vector3(_inputVector.x, 0, _inputVector.y));
+            if(_isMoving==false)
+            {
+                _characterMovement.PlayerMoved();
+                _isMoving = true;
+            }
         }
         else
-        {
-            _switchingAnimations.CharacterStoped();
+        {   
+            if(_isMoving == true)
+            {
+                _characterMovement.PlayerStopped();
+                _isMoving = false;
+            }
+           
         }
     }
 }

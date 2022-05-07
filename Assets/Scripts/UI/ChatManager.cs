@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Chat;
 using Photon.Pun;
@@ -11,15 +9,20 @@ public class ChatManager : MonoBehaviour,IChatClientListener
     [SerializeField] private Text _chatText;
     [SerializeField] private InputField _textMessage;
     [SerializeField] private MoveCharacterWithButtons _moveCharacterWithButtons;
+
     private ChatClient _chatClient;
-    private string _userId;
 
     private void Start()
     {
-        _userId = Random.Range(1, 9).ToString();
         _chatClient = new ChatClient(this);
-        _chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(_userId));
+        if (PhotonNetwork.NickName == "")
+        {
+            PhotonNetwork.NickName = "Player" + Random.Range(1, 1000);
+        }
+        _chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(PhotonNetwork.NickName));
+       
     }
+
     private void Update()
     {
         _chatClient.Service();
@@ -43,7 +46,7 @@ public class ChatManager : MonoBehaviour,IChatClientListener
 
     public void OnConnected()
     {
-        _chatText.text += "\n Вы подключились к чату";
+        _chatText.text += "\nВы подключились к чату";
         _chatClient.Subscribe("Chat");
 
     }
@@ -57,18 +60,26 @@ public class ChatManager : MonoBehaviour,IChatClientListener
     {
         for (int i = 0; i < senders.Length; i++)
         {
-            _chatText.text += $"\n {messages[i]}";
+            _chatText.text += $"\n{senders[i]}: {messages[i]}";
         }
     }
 
     public void OnUserSubscribed(string channel, string user)
     {
-        _chatText.text += "Пользователь подключился ";
+        _chatText.text += $"Пользователь {user} подключился к чату ";
     }
 
     public void OnUserUnsubscribed(string channel, string user)
     {
-        _chatText.text += "Пользователь отключился";
+        _chatText.text += $"Пользователь {user} отключился от чата ";
+    }
+
+    public void OnSubscribed(string[] channels, bool[] results)
+    {
+    }
+
+    public void OnUnsubscribed(string[] channels)
+    {
     }
 
     public void OnPrivateMessage(string sender, object message, string channelName)
@@ -79,11 +90,5 @@ public class ChatManager : MonoBehaviour,IChatClientListener
     {
     }
 
-    public void OnSubscribed(string[] channels, bool[] results)
-    {
-    }
-
-    public void OnUnsubscribed(string[] channels)
-    {
-    }
+   
 }

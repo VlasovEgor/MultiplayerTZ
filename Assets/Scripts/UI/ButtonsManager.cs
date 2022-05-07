@@ -40,6 +40,7 @@ public class ButtonsManager : MonoBehaviour
             }
         }
     }
+
     public void TakeOffOnBoots()
     {
         for (int i = 0; i < _ñlothesList.Count; i++)
